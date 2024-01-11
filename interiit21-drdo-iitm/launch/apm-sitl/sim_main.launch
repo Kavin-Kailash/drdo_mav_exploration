@@ -1,0 +1,13 @@
+<launch>
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+	<arg name="gui" default="true"/>
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+	<arg name="world_name" value="$(find interiit21-drdo-iitm)/worlds/interiit_world2.world"/>
+	<arg name="gui" value="$(arg gui)"/>
+	<!-- more default parameters can be changed here -->
+	</include>
+	<!-- vim: set ft=xml noet : -->
+	<!-- Experimental launch script for APM based Drone -->
+
+	<include file="$(find interiit21-drdo-iitm)/launch/apm-sitl/apm.launch"/>
+</launch>
