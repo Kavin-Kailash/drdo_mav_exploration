@@ -1,0 +1,9 @@
+<launch>
+    <include file="$(find interiit21-drdo)/launch/apm-sitl/sim_main.launch"/>
+
+    <include file="$(find interiit21-drdo)/launch/exploration/exploration.launch"/>
+
+    <include file="$(find interiit21-drdo)/launch/traj-control/traj_control.launch"/>
+
+	<include file="$(find interiit21-drdo)/launch/prec-land/aruco_detect.launch"/>
+</launch>

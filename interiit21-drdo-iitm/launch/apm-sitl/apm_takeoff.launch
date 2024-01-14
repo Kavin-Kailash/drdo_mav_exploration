@@ -3,7 +3,9 @@
 
   <arg name="takeoff_hgt" default="2.5"/>
 
-  <node name="takeoff" type="apm_takeoff" pkg="interiit21-drdo-iitm" output="screen">
+  <!-- Node to takeoff to a particular height-->
+
+  <node name="takeoff" type="apm_takeoff" pkg="interiit21-drdo" output="screen">
     <param name="to_hgt" type= "double" value = "$(arg takeoff_hgt)"/>
   </node> 
 

@@ -1,45 +1,43 @@
 <launch>
-  <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
   <!-- size of map, change the size in x, y, z according to your application -->
-  
-  <!-- Test World 1 -->
-  <!-- <arg name="map_size_x" value="60.0"/>
-  <arg name="map_size_y" value="22.0"/>
-  <arg name="map_size_z" value=" 5.5"/> -->
-
-  <!-- Test World 2 -->
-  <arg name="map_size_x" value="60"/>
-  <arg name="map_size_y" value="60"/>
-  <arg name="map_size_z" value=" 5.5"/>
-
-  <!-- Test World 3 -->
-  <!-- <arg name="map_size_x" value="90.0"/>
-  <arg name="map_size_y" value="15.0"/>
-  <arg name="map_size_z" value=" 5.5"/> -->
-
-  <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <arg name="local_min_x" default='0'/>
+  <arg name="local_min_y" default='0'/>
+  <arg name="local_min_z" default='0'/>
+  <arg name="local_max_x" default='0'/>
+  <arg name="local_max_y" default='0'/>
+  <arg name="local_max_z" default='0'/>
+  <arg name="global_size_x" default='0'/>
+  <arg name="global_size_y" default='0'/>
+  <arg name="global_size_z" default='0'/>
 
   <!-- topic of your odometry such as VIO or LIO -->
   <arg name="odom_topic" value="/mavros/local_position/odom" />
 
   <!-- This node publishes tf from parent_frame to child_frame-->
-  <node pkg="interiit21-drdo-iitm" name="camera_pose_publisher" type="camera_pose_publisher.py" output="screen">
+  <node pkg="interiit21-drdo" name="camera_pose_publisher" type="camera_pose_publisher.py" output="screen">
     <param name="parent_frame" value="world" />
     <param name="child_frame" value="depth_camera_optical_link" />
     <param name="pose_topic" value="/depth_camera/pose" />
   </node>
 
   <!-- main algorithm params -->
-  <include file="$(find interiit21-drdo-iitm)/launch/exploration/algorithm.xml">
+  <include file="$(find interiit21-drdo)/launch/exploration/algorithm.xml">
 
-    <arg name="map_size_x_" value="$(arg map_size_x)"/>
-    <arg name="map_size_y_" value="$(arg map_size_y)"/>
-    <arg name="map_size_z_" value="$(arg map_size_z)"/>
+    <arg name="map_size_x_" value="$(arg global_size_x)"/>
+    <arg name="map_size_y_" value="$(arg global_size_y)"/>
+    <arg name="map_size_z_" value="$(arg global_size_z)"/>
+    <arg name="min_x_" value="$(arg local_min_x)"/>
+    <arg name="min_y_" value="$(arg local_min_y)"/>
+    <arg name="min_z_" value="$(arg local_min_z)"/>
+    <arg name="max_x_" value="$(arg local_max_x)"/>
+    <arg name="max_y_" value="$(arg local_max_y)"/>
+    <arg name="max_z_" value="$(arg local_max_z)"/>
     <arg name="odometry_topic" value="$(arg odom_topic)"/>
 
     <!-- sensor pose: transform of camera frame in the world frame -->
     <arg name="sensor_pose_topic" value="/depth_camera/pose"/>
-    <!-- depth topic: depth image, 640x480 by default -->
+    <!-- depth topic: depth image, only 640x480 supported -->
     <!-- cloud topic: point cloud measurement  -->
     <!-- subscribe ONLY TO ONE of the two topics -->
     <arg name="depth_topic" value="/depth_camera/depth/image_raw"/>
@@ -52,8 +50,8 @@
     <arg name="fy" value="320"/>
 
     <!-- maximum velocity and acceleration the drone will reach -->
-    <arg name="max_vel" value="1.5 " />
-    <arg name="max_acc" value="1.0" />
+    <arg name="max_vel" value="2.5" /> <!-- 1.5 --> <!--2.5 world 1--> <!--2.0-->
+    <arg name="max_acc" value="2.25" /> <!--1.25-->
   </include>
 
   <!-- trajectory server -->
@@ -62,37 +60,22 @@
 
     <remap from="/odom_world" to="$(arg odom_topic)"/>
     <param name="traj_server/time_forward" value="1.5" type="double"/>
-    <param name="traj_server/pub_traj_id" value="5" type="int"/>
+    <param name="traj_server/pub_traj_id" value="10" type="int"/>
     <!-- <param name="loop_correction/isLoopCorrection" value="true" type="bool"/> -->
 
     <param name="perception_utils/top_angle" value="0.6435011" type="double"/>
     <param name="perception_utils/left_angle" value="0.785398" type="double"/>
     <param name="perception_utils/right_angle" value="0.785398" type="double"/>
-    <param name="perception_utils/max_dist" value="7.5" type="double"/>
+    <param name="perception_utils/max_dist" value="3.5" type="double"/>
     <param name="perception_utils/vis_dist" value="1.0" type="double"/>
 
   </node>
-
+  <!-- Planner Trigger Interface -->
   <node pkg="waypoint_generator" name="waypoint_generator" type="waypoint_generator" output="screen">
     <remap from="~odom" to="$(arg odom_topic)"/>        
     <remap from="~goal" to="/move_base_simple/goal"/>
     <remap from="~traj_start_trigger" to="/traj_start_trigger" />
     <param name="waypoint_type" value="point"/>    
   </node>
-
-  <!-- use simulator -->
-  <!-- <include file="$(find exploration_manager)/launch/simulator.xml">
-    <arg name="map_size_x_" value="$(arg map_size_x)"/>
-    <arg name="map_size_y_" value="$(arg map_size_y)"/>
-    <arg name="map_size_z_" value="$(arg map_size_z)"/>
-
-    <arg name="odometry_topic" value="$(arg odom_topic)" />
-    <arg name="c_num" value="0"/>
-    <arg name="p_num" value="130"/>
-  </include> -->
-
-  
-
-
 
 </launch>

@@ -1,0 +1,13 @@
+<launch>
+  
+  <arg name="gui" default="false"/>
+  <arg name="world_id" default="4"/>
+  <arg name="takeoff_ht" default="4.0"/>
+
+  <node pkg="interiit21-drdo" name="commander_node" type="commander.py" output="screen">
+        <param name="gui" value="$(arg gui)"/>
+        <param name="world_id" value="$(arg world_id)"/>
+        <param name="takeoff_ht" value="$(arg takeoff_ht)"/>
+  </node>
+
+</launch>

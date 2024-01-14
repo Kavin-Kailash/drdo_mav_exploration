@@ -10,8 +10,9 @@
   <arg name="ignore_fiducials" default="" />
   <arg name="fiducial_len_override" default="" />
 
+  <!-- Aruco Detect Node -->
   <node pkg="aruco_detect" name="aruco_detect"
-    type="aruco_detect" output="screen" respawn="false">
+    type="aruco_detect" respawn="false">
     <param name="image_transport" value="$(arg transport)"/>
     <param name="publish_images" value="true" />
     <param name="fiducial_len" value="$(arg fiducial_len)"/>
@@ -24,5 +25,5 @@
     <remap from="/camera_info" to="$(arg camera)/camera_info"/>
   </node>
 
-  <node pkg="interiit21-drdo-iitm" name="prec_land_node" type="prec_land.py" output="screen" launch-prefix="bash -c 'sleep 5; $0 $@'"/>
+  <node pkg="interiit21-drdo" name="prec_land_node" type="prec_land.py" output="screen" launch-prefix="bash -c 'sleep 3; $0 $@'"/>
 </launch>

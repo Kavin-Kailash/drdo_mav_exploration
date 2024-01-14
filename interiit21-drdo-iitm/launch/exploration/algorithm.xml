@@ -1,4 +1,10 @@
 <launch>
+  <arg name="min_x_"/>
+  <arg name="min_y_"/>
+  <arg name="min_z_"/>
+  <arg name="max_x_"/>
+  <arg name="max_y_"/>
+  <arg name="max_z_"/>
   <arg name="map_size_x_"/>
   <arg name="map_size_y_"/>
   <arg name="map_size_z_"/>
@@ -17,7 +23,7 @@
   <arg name="max_acc"/>
 
   <!-- main node -->
-  <node pkg="exploration_manager" name="exploration_node" type="exploration_node" output="screen">
+  <node pkg="exploration_manager" name="exploration_node" type="exploration_node" output="screen" respawn="true">
     <remap from ="/odom_world" to="$(arg odometry_topic)"/>
     <remap from ="/map_ros/pose"   to = "$(arg sensor_pose_topic)"/> 
     <remap from ="/map_ros/depth" to = "$(arg depth_topic)"/>
@@ -47,33 +53,12 @@
     <param name="sdf_map/optimistic" value="false" type="bool"/>
     <param name="sdf_map/signed_dist" value="false" type="bool"/>
     
-    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    
-    <!-- World 1 -->
-    <!-- <param name="sdf_map/box_min_x" value="-30" type="double"/>
-    <param name="sdf_map/box_min_y" value="-11" type="double"/>
-    <param name="sdf_map/box_min_z" value="-1" type="double"/>
-    <param name="sdf_map/box_max_x" value="1.0" type="double"/>
-    <param name="sdf_map/box_max_y" value="11" type="double"/>
-    <param name="sdf_map/box_max_z" value="5.0" type="double"/> -->
-    
-    <!-- World 2 -->
-    <param name="sdf_map/box_min_x" value="-30" type="double"/>
-    <param name="sdf_map/box_min_y" value="-4" type="double"/>
-    <param name="sdf_map/box_min_z" value="-1" type="double"/>
-    <param name="sdf_map/box_max_x" value="1.0" type="double"/>
-    <param name="sdf_map/box_max_y" value="25" type="double"/>
-    <param name="sdf_map/box_max_z" value="5.0" type="double"/>
-
-    <!-- World 3 -->
-    <!-- <param name="sdf_map/box_min_x" value="-45" type="double"/>
-    <param name="sdf_map/box_min_y" value="-5.5" type="double"/>
-    <param name="sdf_map/box_min_z" value="-1" type="double"/>
-    <param name="sdf_map/box_max_x" value="1.0" type="double"/>
-    <param name="sdf_map/box_max_y" value="5.5" type="double"/>
-    <param name="sdf_map/box_max_z" value="5.0" type="double"/> -->
-
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <param name="sdf_map/box_min_x" value="$(arg min_x_)" type="double"/>
+    <param name="sdf_map/box_min_y" value="$(arg min_y_)" type="double"/>
+    <param name="sdf_map/box_min_z" value="$(arg min_z_)" type="double"/>
+    <param name="sdf_map/box_max_x" value="$(arg max_x_)" type="double"/>
+    <param name="sdf_map/box_max_y" value="$(arg max_y_)" type="double"/>
+    <param name="sdf_map/box_max_z" value="$(arg max_z_)" type="double"/>
 
     <param name="map_ros/cx" value="$(arg cx)"/>
     <param name="map_ros/cy" value="$(arg cy)"/>
@@ -124,9 +109,9 @@
     <param name="exploration/top_view_num" value="15" type="int"/>
     <param name="exploration/vm" value="$(eval 1.0 * arg('max_vel'))" type="double"/>
     <param name="exploration/am" value="$(eval 1.0 * arg('max_acc'))" type="double"/>
-    <param name="exploration/yd" value="$(eval 12.5 * 3.1415926 / 180.0)" type="double"/>
+    <param name="exploration/yd" value="$(eval 13.5 * 3.1415926 / 180.0)" type="double"/>
     <param name="exploration/w_dir" value="1.5" type="double"/>
-    <param name="exploration/ydd" value="$(eval 15 * 3.1415926 / 180.0)" type="double"/>
+    <param name="exploration/ydd" value="$(eval 17.5 * 3.1415926 / 180.0)" type="double"/>
     <param name="exploration/tsp_dir" value="$(find lkh_tsp_solver)/resource" type="string"/>
     <param name="exploration/relax_time" value="1.0" type="double"/>
 
@@ -161,14 +146,14 @@
     <param name="perception_utils/left_angle" value="0.785398" type="double"/>
     <param name="perception_utils/right_angle" value="0.785398" type="double"/>
     <param name="perception_utils/max_dist" value="7.5" type="double"/>
-    <param name="perception_utils/vis_dist" value="5.0" type="double"/>
+    <param name="perception_utils/vis_dist" value="1.0" type="double"/>
 
 
     <param name="heading_planner/yaw_diff" value="$(eval 15 * 3.1415926 / 180.0)" type="double"/>
     <param name="heading_planner/half_vert_num" value="5" type="int"/>
     <param name="heading_planner/lambda1" value="2.0" type="double"/>
     <param name="heading_planner/lambda2" value="1.0" type="double"/>
-    <param name="heading_planner/max_yaw_rate" value="$(eval 10 * 3.1415926 / 180.0)" type="double"/>
+    <param name="heading_planner/max_yaw_rate" value="$(eval 13.5 * 3.1415926 / 180.0)" type="double"/>
     <param name="heading_planner/w" value="20000.0" type="double"/>
     <param name="heading_planner/weight_type" value="1" type="double"/>
 
@@ -176,7 +161,7 @@
     <!-- <param name="manager/max_vel" value="$(arg max_vel)" type="double"/> -->
     <param name="manager/max_vel" value="$(arg max_vel)" type="double"/>
     <param name="manager/max_acc" value="$(arg max_acc)" type="double"/>
-    <param name="manager/max_jerk" value="2" type="double"/>
+    <param name="manager/max_jerk" value="1.5" type="double"/>
     <param name="manager/dynamic_environment" value="0" type="int"/>
     <param name="manager/local_segment_length" value="6.0" type="double"/>
     <param name="manager/clearance_threshold" value="0.2" type="double"/>
@@ -221,7 +206,7 @@
     <param name="search/margin" value="0.2" type="double"/>
     <param name="search/allocate_num" value="100000" type="int"/>
     <param name="search/check_num" value="10" type="int"/>
-    <param name="search/optimistic" value="false" type="bool"/>
+    <param name="search/optimistic" value="true" type="bool"/>
 
     <param name="astar/lambda_heu" value="100000.0" type="double"/>
     <param name="astar/resolution_astar" value="0.1" type="double"/>
@@ -268,15 +253,15 @@
     <param name="optimization/ld_waypt" value="0.5" type="double"/>
     <param name="optimization/ld_view" value="0.0" type="double"/>
     <param name="optimization/ld_time" value="1.0" type="double"/>
-    <param name="optimization/dist0" value="0.7" type="double"/>
+    <param name="optimization/dist0" value="0.8" type="double"/>
     <param name="optimization/max_vel" value="$(arg max_vel)" type="double"/>
     <param name="optimization/max_acc" value="$(arg max_acc)" type="double"/>
     <param name="optimization/algorithm1" value="15" type="int"/>
     <param name="optimization/algorithm2" value="11" type="int"/>
     <param name="optimization/max_iteration_num1" value="2" type="int"/>
-    <param name="optimization/max_iteration_num2" value="2000" type="int"/>
-    <param name="optimization/max_iteration_num3" value="200" type="int"/>
-    <param name="optimization/max_iteration_num4" value="200" type="int"/>
+    <param name="optimization/max_iteration_num2" value="5000" type="int"/>
+    <param name="optimization/max_iteration_num3" value="500" type="int"/>
+    <param name="optimization/max_iteration_num4" value="500" type="int"/>
 
     <param name="optimization/max_iteration_time1" value="0.0001" type="double"/>
     <param name="optimization/max_iteration_time2" value="0.005" type="double"/>
